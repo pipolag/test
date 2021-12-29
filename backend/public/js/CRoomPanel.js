@@ -139,9 +139,10 @@ function CRoomPanel(){
     
 
     socket.on('message', (message) => {
-      console.log(message);
+      console.log('message',message);
+      _msgText.setText(message.text);
       if(message.text == 'full'){
-        _msgText.text = 'This game is full.'
+        _msgText.setText('text');
         return;
       }else{
 

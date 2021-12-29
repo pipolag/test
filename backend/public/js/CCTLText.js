@@ -143,6 +143,10 @@ CTLText.prototype = {
     getText : function(){
         return this._oText;
     },
+
+    setText : function(text){
+        this._oText.text = text;
+    },
     
     getX : function(){
         return this._x;
