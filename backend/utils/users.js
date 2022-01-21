@@ -29,8 +29,15 @@ function userJoin(id, userName, role, email, roomId, gameId, advanceMode) {
   const user = { id, userName, role, email, roomId, gameId, advanceMode };
 
   users.push(user);
-
+  console.log('userJoin')
+  console.log('users',users)
   return user;
+}
+
+function getRoomUsers(roomId) {
+  console.log('finding user in room',roomId)
+  console.log('users',users)
+  return users.filter(user => user.roomId === roomId);
 }
 
 
@@ -47,14 +54,15 @@ function userLeave(id) {
   const index = users.findIndex(user => user.id === id);
 
   if (index !== -1) {
-    return users.splice(index, 1)[0];
+    console.log('users before leave',users)
+    var leavingUser = users.splice(index, 1)[0];
+    console.log('users after leave',users)
+    return leavingUser;
   }
 }
 
 
-function getRoomUsers(roomId) {
-  return users.filter(user => user.roomId === roomId);
-}
+
 
 module.exports = {
   userJoin,

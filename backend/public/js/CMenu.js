@@ -21,7 +21,7 @@ function CMenu(){
     
     
     this._init = function(){
-        s_b2Players = false;
+        s_b2Players = true;
         if (s_oSoundtrack){
             setVolume(s_oSoundtrack,1);
         }

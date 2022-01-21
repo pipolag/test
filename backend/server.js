@@ -1,6 +1,7 @@
 const path = require('path');
 const http = require('http');
 const express = require('express');
+const cors = require('cors')
 const socketio = require('socket.io');
 const formatMessage = require('./utils/messages');
 const {
@@ -21,9 +22,9 @@ const io = socketio(server);
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-/*app.use(cors({
+app.use(cors({
     origin: '*'
-}));*/
+}));
 
 const botName = 'Game Engine Bot';
 
@@ -84,6 +85,37 @@ io.on('connection', socket => {
     
 
   });
+
+  socket.on("gameStarted", (data) => {
+    console.log("gameStarted",data);
+    const targetRoom = getCurrentRoom(data.roomId);
+    console.log('targetRoom',targetRoom)
+    const usersInRoom = getRoomUsers(data.roomId);
+    console.log('usersInRoom',usersInRoom)
+    var otherPlayer = usersInRoom.find(user => user.userName != data.playerUserName);
+    console.log('otherPlayer',otherPlayer)
+    io.to(otherPlayer.id).emit("autoStartGame", {gameId:data.gameId, msg:formatMessage(botName, 'hello')});
+
+    
+
+  });
+
+  socket.on("gamePlay", (data) => {
+    console.log("gamePlay",data);
+    const targetRoom = getCurrentRoom(data.roomId);
+    console.log('targetRoom',targetRoom)
+    const usersInRoom = getRoomUsers(data.roomId);
+    console.log('usersInRoom',usersInRoom)
+    var otherPlayer = usersInRoom.find(user => user.userName != data.playerUserName);
+    console.log('otherPlayer',otherPlayer)
+    if(otherPlayer){
+      io.to(otherPlayer.id).emit("onGamePlay", {move:data.move,gameData:data.gameData,gameId:data.gameId, msg:formatMessage(botName, 'hello')});
+    }  
+
+    
+
+  });
+
 
 
   socket.on('joinRoom1', ({ username, room }) => {

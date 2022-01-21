@@ -77,6 +77,10 @@ function CSelectPlayers (){
         }
         
         this.refreshButtonPos(s_iOffsetX,s_iOffsetY);
+
+        
+
+        this.onSelectPlayer(true);
         
     };
     

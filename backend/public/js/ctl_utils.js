@@ -3,6 +3,24 @@ var s_iOffsetX;
 var s_iOffsetY;
 var s_bIsIphone = false;
 var s_bFocus = true;
+var socket;
+var urlParams = getUrlVars();
+console.log('urlParams', urlParams)
+var playerType = urlParams['role'];
+var playerUserName = urlParams['user'];
+var gameId = urlParams['gameId'];
+var roomId = urlParams['roomid'];
+var ballMoveInProgress = false;
+var currPlayerTurn = 'host';
+var thisPlayer, otherPlayer;
+var userMovingStick = false;
+if(playerType == 'host'){
+    thisPlayer = 0;
+    otherPlayer = 1;
+}else if(playerType == 'player'){
+    otherPlayer = 0;
+    thisPlayer = 1;
+}
 
 /**
  * jQuery.browser.mobile (http://detectmobilebrowser.com/)

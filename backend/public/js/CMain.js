@@ -1,4 +1,5 @@
 function CMain(oData){
+    console.log('oData',oData)
     var _bUpdate;
     var _iCurResource = 0;
     var RESOURCE_TO_LOAD = 0;
@@ -215,8 +216,12 @@ function CMain(oData){
         ARRAY_IMG_LEVEL[0] = s_oSpriteLibrary.getSprite("but_easy");
         ARRAY_IMG_LEVEL[1] = s_oSpriteLibrary.getSprite("but_medium");
         ARRAY_IMG_LEVEL[2] = s_oSpriteLibrary.getSprite("but_hard");
-        
-        this.gotoMenu();
+        if(playerType == 'player'){
+            new CRoomPanel();
+       }else{
+            this.gotoMenu();
+       }
+        //this.gotoMenu();
     };
     
     this.onAllPreloaderImagesLoaded = function(){
@@ -236,7 +241,11 @@ function CMain(oData){
     
     this.gotoSelectPlayers = function(){
        //new CSelectPlayers(); 
-       new CRoomPanel();
+       if(playerType == 'host'){
+            new CRoomPanel();
+            //new CSelectPlayers();
+       }
+       
     };
     
     this.gotoLevelMenu = function(){

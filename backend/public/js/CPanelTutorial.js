@@ -186,14 +186,26 @@ function CPanelTutorial (bFirstPlay){
        _oContainerPage.removeAllChildren();
        this.loadPage(_iCurrentPage);
     };
-    
-    this.onButSkip = function(){
+    this.onAutoGameStart = function(){
         new createjs.Tween.get(_oContainer).to({alpha: 0},500).call(function(){
             s_oStage.removeChild(_oContainer);
             if (bFirstPlay){
                 s_oGame.setStartGame(true);
             }
         });
+    }
+    this.onButSkip = function(){
+        if(playerType == 'host'){
+            socket.emit("gameStarted",{playerUserName:playerUserName, playerType:playerType,gameId:gameId,roomId:roomId});
+            new createjs.Tween.get(_oContainer).to({alpha: 0},500).call(function(){
+                s_oStage.removeChild(_oContainer);
+                if (bFirstPlay){
+                    s_oGame.setStartGame(true);
+                }
+            });
+
+        }
+        
     };
     
     this.onOver = function(){
@@ -202,3 +214,6 @@ function CPanelTutorial (bFirstPlay){
     
     this.init();
 }
+
+
+var s_oTutorial;

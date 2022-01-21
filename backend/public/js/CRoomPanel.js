@@ -1,13 +1,17 @@
 function CRoomPanel(){
     var urlParams = getUrlVars();
     console.log('ADVANCED_MODE',ADVANCED_MODE)
-    const socket = io.connect("http://localhost:3000");
+    socket = io.connect("http://localhost:3000");
+    //socket = io.connect("https://test-4-nkdjg.ondigitalocean.app:8443");
     socket.emit("joinRoom",{user:urlParams['user'],email:urlParams['email'],roomid:urlParams['roomid'],gameId:urlParams['gameId'],role:urlParams['role'],advanceMode:ADVANCED_MODE});
     var _oFade;
     var _oPanelContainer;
     var _oButExit;
+    var _oButPlay;
     var _oLogo;
     var _msgText;
+
+
     
     var _pStartPanelPos;
     
@@ -101,6 +105,14 @@ function CRoomPanel(){
         var oSprite = s_oSpriteLibrary.getSprite('but_exit');
         _oButExit = new CGfxButton(415, -280, oSprite, _oPanelContainer);
         _oButExit.addEventListener(ON_MOUSE_UP, this.unload, this);
+        _oButExit.setVisible(false);
+
+        oSprite = s_oSpriteLibrary.getSprite('skip_arrow');
+        _oButPlay = new CGfxButton(15, 350, oSprite, _oPanelContainer);
+        _oButPlay.addEventListener(ON_MOUSE_UP, this.play, this);
+
+        _oButPlay.setVisible(false);
+
     };
     
     this.changePointer = function(evt){
@@ -108,8 +120,22 @@ function CRoomPanel(){
             evt.target.cursor = "pointer";  
         }
     };
+
+    this.play = function(){
+        s_b2Players = true;
+        this.unload();        
+        START_PROGRESSIVE_BALL_VELOCITY = ARRAY_BALL_SPEED[1].start_speed;
+        PROGRESSIVE_STEP_BALL_VELOCITY = ARRAY_BALL_SPEED[1].step;
+        LIMIT_SPEED = ARRAY_BALL_SPEED[1].limit;
+        INDEX_DIFFICULT = 1;
+        s_oMain.gotoGame();
+
+        
+
+    }
     
     this.unload = function(){
+        console.log('exit')
         
         _oButExit.setClickable(false);
         
@@ -137,14 +163,39 @@ function CRoomPanel(){
     
     this._init();
     
+    socket.on('autoStartGame', (message) => {
+      console.log('autoStartGame',message);
+      s_oTutorial.onAutoGameStart();
 
+     });
+
+    socket.on('onGamePlay', (message) => {
+      //console.log('onGamePlay',message);
+      if(message.move == 'mousedown'){
+        s_oGame.onMouseDownMsg(message.gameData.xVal, message.gameData.yVal);
+      }else if(message.move == 'updateSpritePosition'){
+        
+      }else if(message.move == 'moveStick'){
+        console.log('onGamePlay',message);
+        s_oGame.updateRemote(message);
+      }
+
+     });
+    
     socket.on('message', (message) => {
       console.log('message',message);
       _msgText.setText(message.text);
       if(message.text == 'full'){
         _msgText.setText('text');
         return;
-      }else{
+      }else if(message.text == "user2 has joined the game"){
+        _oButPlay.setVisible(true);
+        return;
+      }else if(message.text == "Hello user2 Welcome to ember gaming engine!"){
+        this.play();
+        return;
+      }
+      else{
 
       }
       

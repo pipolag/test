@@ -16,8 +16,10 @@ function CStick (iX,iY,iColorStick,iXLeft,iXRight,aPosEdges,iTypeStick,iSpeed){
     var _bStrongShot;
     var _iTimeStrongShotPowerUP;
     var _bUserMovement;
+    var _playerIndex;
     
-    this.init = function(iX,iY,iColorStick,iXLeft,iXRight,aPosEdges,iTypeStick,iSpeed){
+    this.init = function(iX,iY,iColorStick,iXLeft,iXRight,aPosEdges,iTypeStick,iSpeed,playerIndex){
+        _playerIndex = playerIndex
         var oSprite;
         var oSprite2;
         var oInfo;
@@ -146,6 +148,7 @@ function CStick (iX,iY,iColorStick,iXLeft,iXRight,aPosEdges,iTypeStick,iSpeed){
        _bUserMovement = true;
        
        _iCurAcceleration -= STICK_ACCELLERATION;
+       console.log('here2')
 
         this.__updateStickPositions();        
     };
@@ -158,11 +161,22 @@ function CStick (iX,iY,iColorStick,iXLeft,iXRight,aPosEdges,iTypeStick,iSpeed){
        _bUserMovement = true;
        
        _iCurAcceleration += STICK_ACCELLERATION;
+       console.log('here3')
        
         this.__updateStickPositions();
     };
+
+    this.__updateStickPositionsRemote = function(iPlacement){
+        console.log('receiving')
+        for (var i=0;i<_aPlayerEdges.length;i++){
+              _aPlayerEdges[i].moveX(iPlacement);
+              _aSpritesPlayer[i].x += iPlacement;
+        }
+    }
     
     this.__updateStickPositions = function(){
+
+        console.log('__updateStickPositions')
         
        if( Math.abs(_iCurAcceleration) > _iSpeed ){           
             if( _iCurAcceleration < 0 ){
@@ -182,6 +196,14 @@ function CStick (iX,iY,iColorStick,iXLeft,iXRight,aPosEdges,iTypeStick,iSpeed){
             iPlacement = _iXRightMax-_aSpritesPlayer[0].x;
         }
          
+        //if(_playerIndex != otherPlayer){
+        if(userMovingStick && _playerIndex != otherPlayer){
+            console.log('emitting')
+            //setTimeout(() => {userMovingStick = false}, 25000);
+            
+            //userMovingStick = false;
+            socket.emit("gamePlay",{move:'moveStick', gameData:{iPlacement:iPlacement,playerIndex:_playerIndex},playerUserName:playerUserName, playerType:playerType,gameId:gameId,roomId:roomId});
+        }
         
         for (var i=0;i<_aPlayerEdges.length;i++){
               _aPlayerEdges[i].moveX(iPlacement);
@@ -199,7 +221,7 @@ function CStick (iX,iY,iColorStick,iXLeft,iXRight,aPosEdges,iTypeStick,iSpeed){
         }
         
         _bUserMovement = false;
-        
+        console.log('here1')
         this.__updateStickPositions();
         
         if (_bStrongShot){

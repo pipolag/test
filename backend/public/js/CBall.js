@@ -18,6 +18,7 @@ function CBall(iXPos, iYPos, oSprite, iID, oParentContainer) {
     var _oBallTrajectory;
 
     this._init = function (iXPos, iYPos, oSprite, iID) {
+        console.log('init')
         _oContainer = new createjs.Container();
         _oContainer.x = iXPos;
         _oContainer.y = iYPos;
@@ -57,11 +58,13 @@ function CBall(iXPos, iYPos, oSprite, iID, oParentContainer) {
     };
 
     this.setPosition = function (iXPos, iYPos) {
+        console.log(iXPos,'setPosition',iYPos)
         _oContainer.x = iXPos;
         _oContainer.y = iYPos;
     };
 
     this.resetPos = function () {
+        console.log('resetPos')
         _oContainer.x = _oStartPos.x;
         _oContainer.y = _oStartPos.y;
         _vPos.set(_oContainer.x, _oContainer.y);
@@ -69,6 +72,7 @@ function CBall(iXPos, iYPos, oSprite, iID, oParentContainer) {
     };
 
     this.setAngle = function (iAngle) {
+        console.log('setAngle')
         _oBall.rotation = iAngle;
     };
 
@@ -77,6 +81,7 @@ function CBall(iXPos, iYPos, oSprite, iID, oParentContainer) {
     };
 
     this.getX = function () {
+        //console.log('getX')
         return _oContainer.x;
     };
     
@@ -89,6 +94,7 @@ function CBall(iXPos, iYPos, oSprite, iID, oParentContainer) {
     };
 
     this.getY = function () {
+        //console.log('getY')
         return _oContainer.y;
     };
     
@@ -130,6 +136,7 @@ function CBall(iXPos, iYPos, oSprite, iID, oParentContainer) {
     };
 
     this.setPos = function (vPos) {
+        console.log('setPos')
         _vPos.setV(vPos);
     };
 
@@ -145,9 +152,21 @@ function CBall(iXPos, iYPos, oSprite, iID, oParentContainer) {
         return _iRadiusQuadro;
     };
 
+    this.remoteUpdateSpritePosition = function (xVal,yVal) {
+        
+        _oContainer.x = xVal;
+        _oContainer.y = yVal;
+
+    }
+
     this.updateSpritePosition = function () {
+        
         _oContainer.x = _vPos.getX();
         _oContainer.y = _vPos.getY();
+        if(ballMoveInProgress){
+            //console.log(_oContainer.x,'updateSpritePosition',_oContainer.y)
+            socket.emit("gamePlay",{move:'updateSpritePosition', gameData:{xVal:0 , yVal:0}, playerUserName:playerUserName, playerType:playerType,gameId:gameId,roomId:roomId,x:_oContainer.x,y:_oContainer.y});
+        }
     };
 
     this.isGoalKeeper = function () {
@@ -172,6 +191,7 @@ function CBall(iXPos, iYPos, oSprite, iID, oParentContainer) {
     };
     
     this.updateTrajectory = function(){
+       // console.log('updateTrajectory');
        _oBallTrajectory.update(_vPos);
     };
 

@@ -42,6 +42,10 @@ function CVector2(iX, iY) {
         x = v.getX();
         y = v.getY();
     };
+    this.setVRemote = function (xVal,yVal) {
+        x = xVal;
+        y = yVal;
+    };
     this.length = function () {
         return Math.sqrt(x * x + y * y);
     };

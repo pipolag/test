@@ -126,8 +126,8 @@ function CGame(oData){
         _iNearestBall = 0;
         _iProgressiveBallVelocity = START_PROGRESSIVE_BALL_VELOCITY;
         
-        _aPlayersStick[thisPlayer]=new CStick(CANVAS_WIDTH/2,CANVAS_HEIGHT-130,BLUE_STICK, EDGEBOARD_X+2+100,CANVAS_WIDTH-(EDGEBOARD_X+2+100),[{x1: CANVAS_WIDTH/2+70, x2:CANVAS_WIDTH/2-70}],GOALKEEPER,PLAYER_SPEED_STICKS,thisPlayer);
-        _aPlayersStick[otherPlayer] = new CStick(CANVAS_WIDTH/2,130,RED_STICK, EDGEBOARD_X+2+100,CANVAS_WIDTH-(EDGEBOARD_X+2+100),[{x2:CANVAS_WIDTH/2+70,x1:CANVAS_WIDTH/2-70}],GOALKEEPER,CPU_SPEED_STICKS,otherPlayer);
+        _aPlayersStick[PLAYER_1]=new CStick(CANVAS_WIDTH/2,CANVAS_HEIGHT-130,BLUE_STICK, EDGEBOARD_X+2+100,CANVAS_WIDTH-(EDGEBOARD_X+2+100),[{x1: CANVAS_WIDTH/2+70, x2:CANVAS_WIDTH/2-70}],GOALKEEPER,PLAYER_SPEED_STICKS);
+        _aPlayersStick[PLAYER_2] = new CStick(CANVAS_WIDTH/2,130,RED_STICK, EDGEBOARD_X+2+100,CANVAS_WIDTH-(EDGEBOARD_X+2+100),[{x2:CANVAS_WIDTH/2+70,x1:CANVAS_WIDTH/2-70}],GOALKEEPER,CPU_SPEED_STICKS);
         
         _oInterface.setOnTop();
         
@@ -219,24 +219,11 @@ function CGame(oData){
                 evt = window.event; 
             } 
             evt.preventDefault(); 
-           switch (evt.keyCode){               
-               case 37: 
-               //userMovingStick = false;
-               if(playerType == 'host'){
-                    _bUP1 = false;
-               }else{
-                    _bUP2 = false;
-               }               
-                break;
-               case 39: 
-               //userMovingStick = false;
-               if(playerType == 'host'){
-                    _bDOWN1 = false;
-               }else{
-                    _bDOWN2 = false;
-               }
-
-
+           switch (evt.keyCode){
+               case 65: _bUP1 = false; break;
+               case 68: _bDOWN1 = false; break;
+               case 37: _bUP2 = false; break;
+               case 39:  _bDOWN2 = false; break;
            }
         };
         
@@ -246,25 +233,10 @@ function CGame(oData){
              } 
             evt.preventDefault(); 
            switch (evt.keyCode){
-               
-               case 37:
-               userMovingStick = true;
-               if(playerType == 'host'){
-                    _bUP1 = true; _iXGlobalMouse = null;
-               }else{
-                    _bUP2 = true;
-               }
-               console.log('left arrow pressed')
-                break;
-               case 39: 
-               userMovingStick = true;
-                if(playerType == 'host'){
-                    _bDOWN1 = true; _iXGlobalMouse = null;
-                }else{
-                    _bDOWN2 = true;
-                }
-                 
-               break;
+               case 65: _bUP1 = true; _iXGlobalMouse = null; break;
+               case 68: _bDOWN1 = true; _iXGlobalMouse = null; break;
+               case 37: _bUP2 = true; break;
+               case 39:  _bDOWN2 = true; break;
                case 32: 
                    if (event.keyCode===32){
                     if (_bBallSpin&&!_bInputUpdate&&_bStartGame){
@@ -300,7 +272,7 @@ function CGame(oData){
     };
     
         this.fixMouseTremmle = function(){
-           if (_aPlayersStick[thisPlayer].getX()-15<_iXGlobalMouse&&_aPlayersStick[thisPlayer].getX()+15>_iXGlobalMouse){
+           if (_aPlayersStick[PLAYER_1].getX()-15<_iXGlobalMouse&&_aPlayersStick[PLAYER_1].getX()+15>_iXGlobalMouse){
                return false;
            }
            return true;
@@ -494,7 +466,7 @@ function CGame(oData){
                 playSound("goal_player",1,false);
                 _iPlayer1Points++;
                 _oInterface.goalP1(_iPlayer1Points);
-                this.showSpecialText(thisPlayer,_oGoalText);
+                this.showSpecialText(PLAYER_1,_oGoalText);
                 ballMoveInProgress = false;
                 if (_iPlayer1Points===POINTS_TO_WIN){
                     this.gameOver(0);
@@ -517,7 +489,7 @@ function CGame(oData){
                 }
                 _iPlayer2Points++;
                 _oInterface.goalP2(_iPlayer2Points);
-                this.showSpecialText(otherPlayer,_oGoalText);
+                this.showSpecialText(PLAYER_2,_oGoalText);
                 ballMoveInProgress = false;
                 if (_iPlayer2Points===POINTS_TO_WIN){
                     this.gameOver(1);
@@ -536,10 +508,10 @@ function CGame(oData){
         oPowerUP.stop();
         oPowerUP.rotation = 0;
         var iDestinationY;
-        if (iPlayer===thisPlayer){
+        if (iPlayer===PLAYER_1){
             oPowerUP.y = Y_OFFBOARD_MESSAGES_DOWN;
             iDestinationY = Y_MESSAGES_ON_BOARD_DOWN;
-        }else if (iPlayer===otherPlayer){
+        }else if (iPlayer===PLAYER_2){
             oPowerUP.y = Y_OFFBOARD_MESSAGES_UP;
             iDestinationY = Y_MESSAGES_ON_BOARD_UP;
             if (s_b2Players&&s_bMobile){
@@ -568,10 +540,10 @@ function CGame(oData){
        // _iCounterPowerUP = 0;
         _iCounterRotate = 0;
         _iTimeCrazyBall = 0;
-        _aPlayersStick[thisPlayer].setStrongShotPowerUP(false);
-        _aPlayersStick[otherPlayer].setStrongShotPowerUP(false);
-        _aPlayersStick[thisPlayer].resetSize();
-        _aPlayersStick[otherPlayer].resetSize();
+        _aPlayersStick[PLAYER_1].setStrongShotPowerUP(false);
+        _aPlayersStick[PLAYER_2].setStrongShotPowerUP(false);
+        _aPlayersStick[PLAYER_1].resetSize();
+        _aPlayersStick[PLAYER_2].resetSize();
        _bBallSpin = true;
        _bGoalCheck = true;
        _bInputUpdate = false;
@@ -581,7 +553,7 @@ function CGame(oData){
        }
     };
     this.updateRemote = function(data){
-        _aPlayersStick[otherPlayer].__updateStickPositionsRemote(data.gameData.iPlacement);
+        _aPlayersStick[PLAYER_2].__updateStickPositionsRemote(data.gameData.iPlacement);
     }
     this.update = function(){
         var iStep;
@@ -678,29 +650,29 @@ function CGame(oData){
             if (_bInputUpdate){
                 if (_iXGlobalMouse){
                     if (this.fixMouseTremmle()){
-                        if (_iXGlobalMouse>_aPlayersStick[thisPlayer].getX()){
-                            _aPlayersStick[thisPlayer].onKeyRight();
+                        if (_iXGlobalMouse>_aPlayersStick[PLAYER_1].getX()){
+                            _aPlayersStick[PLAYER_1].onKeyRight();
                         }
 
-                        if (_iXGlobalMouse<_aPlayersStick[thisPlayer].getX()){
-                            _aPlayersStick[thisPlayer].onKeyLeft();
+                        if (_iXGlobalMouse<_aPlayersStick[PLAYER_1].getX()){
+                            _aPlayersStick[PLAYER_1].onKeyLeft();
                         }
                     }
                 }else{
                     if (_bUP1){
-                        _aPlayersStick[thisPlayer].onKeyLeft();
+                        _aPlayersStick[PLAYER_1].onKeyLeft();
                     }
                     if (_bDOWN1){
-                        _aPlayersStick[thisPlayer].onKeyRight();
+                        _aPlayersStick[PLAYER_1].onKeyRight();
                         
                     }
                 }
                 if (s_b2Players){
                     if (_bDOWN2){
-                            _aPlayersStick[otherPlayer].onKeyRight();
+                            _aPlayersStick[PLAYER_2].onKeyRight();
                     }
                     if (_bUP2){
-                            _aPlayersStick[otherPlayer].onKeyLeft();
+                            _aPlayersStick[PLAYER_2].onKeyLeft();
                     }
                 }
                 if (!s_b2Players){
@@ -713,7 +685,7 @@ function CGame(oData){
                             }
                         }
                     }
-                    this.AICpu(_aBall[_iNearestBall],_aPlayersStick[otherPlayer]);
+                    this.AICpu(_aBall[_iNearestBall],_aPlayersStick[PLAYER_2]);
                 }
             }
             
