@@ -12,16 +12,16 @@ var gameId = urlParams['gameId'];
 var roomId = urlParams['roomid'];
 var ballMoveInProgress = false;
 var currPlayerTurn = 'host';
-var thisPlayer, otherPlayer;
+var thisPlayer = 0, otherPlayer = 1;
 var userMovingStick = false;
-if(playerType == 'host'){
+/*if(playerType == 'host'){
     thisPlayer = 0;
     otherPlayer = 1;
 }else if(playerType == 'player'){
     otherPlayer = 0;
     thisPlayer = 1;
-}
-
+}*/
+console.log(thisPlayer,'set',otherPlayer);
 /**
  * jQuery.browser.mobile (http://detectmobilebrowser.com/)
  * jQuery.browser.mobile will be true if the browser is a mobile device

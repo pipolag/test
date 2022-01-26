@@ -1,4 +1,4 @@
-function CStick (iX,iY,iColorStick,iXLeft,iXRight,aPosEdges,iTypeStick,iSpeed){
+function CStick (iX,iY,iColorStick,iXLeft,iXRight,aPosEdges,iTypeStick,iSpeed,playerIndex){
     var _oContainer;
     var _iXLeftMax;
     var _iXRightMax;
@@ -20,6 +20,7 @@ function CStick (iX,iY,iColorStick,iXLeft,iXRight,aPosEdges,iTypeStick,iSpeed){
     
     this.init = function(iX,iY,iColorStick,iXLeft,iXRight,aPosEdges,iTypeStick,iSpeed,playerIndex){
         _playerIndex = playerIndex
+        console.log('_playerIndex',playerIndex)
         var oSprite;
         var oSprite2;
         var oInfo;
@@ -197,13 +198,18 @@ function CStick (iX,iY,iColorStick,iXLeft,iXRight,aPosEdges,iTypeStick,iSpeed){
         }
          
         //if(_playerIndex != otherPlayer){
-        if(userMovingStick && _playerIndex != otherPlayer){
-            console.log('emitting')
-            //setTimeout(() => {userMovingStick = false}, 25000);
-            
-            //userMovingStick = false;
-            socket.emit("gamePlay",{move:'moveStick', gameData:{iPlacement:iPlacement,playerIndex:_playerIndex},playerUserName:playerUserName, playerType:playerType,gameId:gameId,roomId:roomId});
-        }
+        //if(userMovingStick && _playerIndex != otherPlayer){
+            //if(_playerIndex != otherPlayer){
+        //if(userMovingStick){
+            if((playerType == 'host' && _playerIndex == PLAYER_1) || (playerType == 'player' && _playerIndex == PLAYER_2)){
+                console.log(_playerIndex, 'emitting', playerType)
+                //setTimeout(() => {userMovingStick = false}, 25000);
+                
+                //userMovingStick = false;
+                socket.emit("gamePlay",{move:'moveStick', gameData:{iPlacement:iPlacement,playerIndex:_playerIndex},playerUserName:playerUserName, playerType:playerType,gameId:gameId,roomId:roomId});
+            }
+        //}
+        
         
         for (var i=0;i<_aPlayerEdges.length;i++){
               _aPlayerEdges[i].moveX(iPlacement);
@@ -232,6 +238,9 @@ function CStick (iX,iY,iColorStick,iXLeft,iXRight,aPosEdges,iTypeStick,iSpeed){
         }
         
     };
+    this.setVisible = function(val){
+        _oContainer.visible = val;
+    }
     
-    this.init(iX,iY,iColorStick,iXLeft,iXRight,aPosEdges,iTypeStick,iSpeed);
+    this.init(iX,iY,iColorStick,iXLeft,iXRight,aPosEdges,iTypeStick,iSpeed, playerIndex);
 }
