@@ -6,7 +6,7 @@ const port = process.env.PORT || 8081;
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
-
+io.set('transports', ['websocket']);
 io.on('connection', (socket) => {
 	console.log("connection made");
   socket.on('chat message', msg => {
