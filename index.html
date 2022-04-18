@@ -52,6 +52,7 @@
       });
 
       socket.on('chatMessage', function(msg) {
+		console.log('chatMessage received');
         var item = document.createElement('li');
         item.textContent = msg;
         messages.appendChild(item);
