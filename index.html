@@ -32,7 +32,12 @@
 	  socketURL = "https://my-app-3-9nf4a.ondigitalocean.app";
 	  socketURL = "wss://my-app-3-9nf4a.ondigitalocean.app";
 	  
-	  const socket = io.connect(socketURL);
+	  socketURL = "http://my-app-3-9nf4a.ondigitalocean.app";
+	  
+	  const socket = io.connect(socketURL, {
+			upgrade: false,
+			transports: ['websocket']
+	  });
 
       var messages = document.getElementById('messages');
       var form = document.getElementById('form');
