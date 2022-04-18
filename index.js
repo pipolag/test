@@ -8,8 +8,11 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
+	console.log("connection made");
   socket.on('chat message', msg => {
-    io.emit('chat message', msg);
+	  console.log("chat message received on server");
+	  io.emit('chat message', msg);
+	  console.log("chat message forwarded from server");
   });
 });
 
