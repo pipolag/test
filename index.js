@@ -16,9 +16,9 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
 	console.log("connection made");
   socket.on('chat message', msg => {
-	  console.log("chat message received on server");
+	  console.log("chat message received on server", msg);
 	  io.emit('chat message', msg);
-	  console.log("chat message forwarded from server");
+	  console.log("chat message forwarded from server", msg);
   });
 });
 
