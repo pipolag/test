@@ -17,7 +17,8 @@ io.on('connection', (socket) => {
 	console.log("connection made");
   socket.on('chat message', msg => {
 	  console.log("chat message received on server", msg);
-	  io.emit('chatMessage', msg);
+	  //io.emit('chatMessage', msg);
+	  socket.emit('chatMessage', msg);
 	  console.log("chat message forwarded from server", msg);
   });
 });
