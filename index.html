@@ -23,7 +23,13 @@
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
-      var socket = io();
+      //var socket = io();
+	  
+	  var socketURL = "http://localhost:8081";
+	  
+	  socketURL = "http://0.0.0.0";
+	  
+	  const socket = io.connect(socketURL);
 
       var messages = document.getElementById('messages');
       var form = document.getElementById('form');
